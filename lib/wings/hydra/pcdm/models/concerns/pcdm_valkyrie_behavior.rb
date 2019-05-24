@@ -43,6 +43,8 @@ module Wings
 
       ##
       # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the child collections
+      # TODO: All collections will be natrually ordered when the application is valkyrie-native, aliasing ordered_collection*
+      # has not actual guarantee to collection order.
       def child_collections(valkyrie: false)
         @child_collections_navigator ||= ChildCollectionsNavigator.new(query_service: ::Valkyrie.config.metadata_adapter.query_service)
         resources = @child_collections_navigator.find_child_collections(resource: self)
@@ -50,13 +52,17 @@ module Wings
         resources.map { |r| Wings::ActiveFedoraConverter.new(resource: r).convert }
       end
       alias collections child_collections
+      alias ordered_collections child_collections
 
       ##
       # @return [Enumerable<String> | Enumerable<Valkyrie::ID] the child collection ids
+      # TODO: All collections will be natrually ordered when the application is valkyrie-native, aliasing ordered_collection*
+      # has not actual guarantee to collection order.
       def child_collection_ids(valkyrie: false)
         child_collections(valkyrie: valkyrie).map(&:id)
       end
       alias collection_ids child_collection_ids
+      alias ordered_collection_ids child_collection_ids
 
       ##
       # Gives the subset of #members that are PCDM objects
